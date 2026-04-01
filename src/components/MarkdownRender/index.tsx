@@ -5,7 +5,7 @@ import { useEffect, useMemo } from "react"
 import { useDarkMode } from "../../utils/hook"
 import ImageZoom from "../ImageZoom"
 
-const MarkdownRender = (props: { value: string }) => {
+const MarkdownRender = (props: { value: string; onClickCapture?: () => boolean }) => {
     const isDark = useDarkMode()
     
     // 缓存 Markdown 渲染结果，避免重复计算
@@ -18,7 +18,7 @@ const MarkdownRender = (props: { value: string }) => {
                 // 使用 span 包裹避免 p > div 嵌套问题
                 img: ({ src, alt }) => (
                     <span className="inline-block">
-                        <ImageZoom key={src} src={src || ''} alt={alt} />
+                        <ImageZoom key={src} src={src || ''} alt={alt} onClickCapture={props.onClickCapture} />
                     </span>
                 ),
                 pre: ({ node, children, ...props }) => (

@@ -5,15 +5,64 @@ import { createPortal } from 'react-dom';
 interface ImageZoomProps {
     src: string;
     alt?: string;
+    onClickCapture?: () => boolean;
 }
 
-const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt }) => {
+const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt, onClickCapture }) => {
     const [visible, setVisible] = useState(false);
     const prevSrcRef = useRef<string>('');
+    const isDragging = useRef(false);
+    const startPos = useRef({ x: 0, y: 0 });
 
-    // 处理点击事件
-    const handleClick = () => {
-        setVisible(true);
+    // 处理触摸开始
+    const handleTouchStart = (e: React.TouchEvent) => {
+        startPos.current = {
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY
+        };
+        isDragging.current = false;
+    }
+
+    // 处理触摸移动
+    const handleTouchMove = (e: React.TouchEvent) => {
+        const currentX = e.touches[0].clientX;
+        const currentY = e.touches[0].clientY;
+        const diffX = Math.abs(currentX - startPos.current.x);
+        const diffY = Math.abs(currentY - startPos.current.y);
+        
+        // 如果移动距离超过阈值，标记为拖拽
+        if (diffX > 10 || diffY > 10) {
+            isDragging.current = true;
+        }
+    }
+
+    // 处理触摸结束
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        if (!isDragging.current) {
+            // 如果父组件设置了 onClickCapture，先调用它决定是否允许点击
+            if (onClickCapture) {
+                const allowed = onClickCapture()
+                if (!allowed) {
+                    return
+                }
+            }
+            setVisible(true);
+        }
+        isDragging.current = false;
+    }
+
+    // 处理点击事件（备用方案）
+    const handleClick = (e: React.MouseEvent) => {
+        if (!isDragging.current) {
+            // 如果父组件设置了 onClickCapture，先调用它决定是否允许点击
+            if (onClickCapture) {
+                const allowed = onClickCapture()
+                if (!allowed) {
+                    return
+                }
+            }
+            setVisible(true);
+        }
     }
 
     // 监听 src 变化来关闭预览（只在 src 实际变化且当前是打开状态时）
@@ -100,6 +149,9 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt }) => {
                 src={src} 
                 alt={alt}
                 onClick={handleClick}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
                 style={{ 
                     maxWidth: '100%',
                     cursor: 'pointer'

@@ -22,6 +22,7 @@ const PracticePage = (props: PractiseProps) => {
     const ref = useRef<SwiperRef>(null)
 
     const [hiddenAnswer, setHiddenAnswer] = useState<Boolean>(prac)
+    const doubleTapTimestamp = useRef<number>(0)
 
     const renderTitle = () => {
         return item ? <div className="flex items-center gap-2">
@@ -40,11 +41,15 @@ const PracticePage = (props: PractiseProps) => {
 
     // 处理移动端触摸双击
     const touchStartTime = useRef<number>(0)
-    const handleTouchEnd = () => {
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        // 如果触摸目标是图片，不处理双击
+        if ((e.target as HTMLElement).closest('img')) {
+            return
+        }
         const now = Date.now()
         if (now - touchStartTime.current < 300 && now - touchStartTime.current > 50) {
             // 300ms 内两次点击判定为双击
-            setHiddenAnswer(pre => !pre)
+            toggleAnswer()
         }
         touchStartTime.current = now
     }
@@ -55,6 +60,8 @@ const PracticePage = (props: PractiseProps) => {
         flushSync(() => {
             setHiddenAnswer(pre => !pre);
         });
+        // 记录双击时间戳，在接下来 300ms 内忽略图片点击
+        doubleTapTimestamp.current = Date.now();
     };
 
     const renderContent = () => {
@@ -76,7 +83,13 @@ const PracticePage = (props: PractiseProps) => {
                         </div>
                     </div>}
                     <div 
-                        onClick={doubleClick((_, double) => double && toggleAnswer(), 150)}
+                        onClick={(e) => {
+                            // 如果点击目标是图片，不处理双击
+                            if ((e.target as HTMLElement).closest('img')) {
+                                return
+                            }
+                            doubleClick((_, double) => double && toggleAnswer(), 150)(e)
+                        }}
                         onTouchEnd={handleTouchEnd}
                         className={`flex-1 min-h-0 h-full w-full overflow-auto flex flex-col items-center
 					${hiddenAnswer ? ' justify-center pb-20' : 'justify-start'}`}>
@@ -88,7 +101,15 @@ const PracticePage = (props: PractiseProps) => {
                         </div>
                         {/* 始终渲染答案，通过 CSS 控制显示/隐藏 */}
                         <div className="px-4 w-full h-full pb-4 overflow-auto" style={{ touchAction: 'manipulation', display: !hiddenAnswer ? 'block' : 'none' }}>
-                            <MarkdownRender key={markdownKey} value={item.answer} />
+                            <MarkdownRender key={markdownKey} value={item.answer} 
+                                onClickCapture={() => {
+                                    const now = Date.now()
+                                    // 如果在双击后 300ms 内，阻止点击
+                                    if (now - doubleTapTimestamp.current < 300 && now - doubleTapTimestamp.current >= 0) {
+                                        return false
+                                    }
+                                    return true
+                                }} />
                         </div>
                     </div>
                 </div>
