@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 
 interface ImageZoomProps {
@@ -10,23 +10,33 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt }) => {
     const [visible, setVisible] = useState(false);
 
     // 当 src 变化时，自动关闭预览
-    React.useEffect(() => {
+    useEffect(() => {
+        setVisible(false);
+    }, [src]);
+
+    // 阻止背景滚动
+    useEffect(() => {
         if (visible) {
-            setVisible(false);
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
         }
-    }, [src, visible]);
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [visible]);
 
     return (
         <>
             <img 
                 src={src} 
                 alt={alt}
-                className="cursor-pointer max-w-full hover:opacity-90 transition-opacity"
                 onClick={() => setVisible(true)}
                 style={{ 
                     maxWidth: '100%',
                     cursor: 'pointer'
                 }}
+                className="max-w-full hover:opacity-90 transition-opacity"
             />
             {visible && (
                 <div 
