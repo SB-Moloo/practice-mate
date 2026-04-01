@@ -36,7 +36,12 @@ const MarkdownRender = (props: { value: string }) => {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
         components={{
-            img: ({ src, alt }) => <ImageZoom src={src || ''} alt={alt} />,
+            // 使用 span 包裹避免 p > div 嵌套问题
+            img: ({ src, alt }) => (
+                <span className="inline-block">
+                    <ImageZoom key={src} src={src || ''} alt={alt} />
+                </span>
+            ),
             pre: ({ node, children, ...props }) => (
                 <pre 
                     {...props}

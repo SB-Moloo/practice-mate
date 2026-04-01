@@ -56,7 +56,8 @@ const PracticePage = (props: PractiseProps) => {
             }
             // 切换题目时，触发所有图片组件的 src 变化，会自动关闭预览
         }} defaultIndex={index} allowTouchMove={true} style={{ "--height": '100%' }}>{questionPool.map((item, idx) => {
-            return <Swiper.Item className="h-full relative" key={idx}>
+            const markdownKey = item.id || `${idx}-${item.question?.substring(0, 20)}`;
+            return <Swiper.Item className="h-full relative" key={item.id || idx}>
                 <div className="h-full relative flex flex-col">
                     {!hiddenAnswer && <div className="text-lg dark:text-white mb-1" style={{ flex: '0 0 auto' }}>
                         <div className="break-all pt-2 pl-4 text-xl text-neutral-700 dark:text-neutral-400 flex items-center flex-wrap gap-2">
@@ -78,7 +79,7 @@ const PracticePage = (props: PractiseProps) => {
                             </div>
                         )}
                         {!hiddenAnswer && <div className="px-4 w-full h-full pb-4 overflow-auto" style={{ touchAction: 'manipulation' }}>
-                            <MarkdownRender value={questionPool[index].answer} />
+                            <MarkdownRender key={markdownKey} value={item.answer} />
                         </div>}
                     </div>
                 </div>
