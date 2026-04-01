@@ -97,8 +97,19 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt, onClickCapture }) => {
             >
                 <div 
                     className="w-full h-full relative"
-                    onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                    data-debug="preview-container"
+                    onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                    }}
+                    onTouchStart={(e: React.TouchEvent) => {
+                        e.stopPropagation()
+                    }}
+                    onTouchMove={(e: React.TouchEvent) => {
+                        e.stopPropagation()
+                    }}
+                    onTouchEnd={(e: React.TouchEvent) => {
+                        e.stopPropagation()
+                    }}
                 >
                     <button 
                         className="absolute top-4 right-4 text-white text-4xl z-[60] p-2 hover:text-gray-300 transition-colors bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center"
