@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react"
+import { flushSync } from "react-dom"
 import { FloatingBubble, Swiper, SwiperRef } from "antd-mobile"
 import { doubleClick } from "../../utils/common"
 import { PracticeItem } from "../../types"
@@ -48,6 +49,14 @@ const PracticePage = (props: PractiseProps) => {
         touchStartTime.current = now
     }
 
+    // 立即切换答案显示状态
+    const toggleAnswer = () => {
+        // 使用 flushSync 确保状态立即更新并同步渲染
+        flushSync(() => {
+            setHiddenAnswer(pre => !pre);
+        });
+    };
+
     const renderContent = () => {
         return <Swiper ref={ref} onIndexChange={(index) => {
             setIndex(index)
@@ -67,20 +76,20 @@ const PracticePage = (props: PractiseProps) => {
                         </div>
                     </div>}
                     <div 
-                        onClick={doubleClick((_, double) => double && setHiddenAnswer(pre => !pre))}
+                        onClick={doubleClick((_, double) => double && toggleAnswer(), 150)}
                         onTouchEnd={handleTouchEnd}
                         className={`flex-1 min-h-0 h-full w-full overflow-auto flex flex-col items-center
 					${hiddenAnswer ? ' justify-center pb-20' : 'justify-start'}`}>
-                        {hiddenAnswer && (
-                            <div className="p-4 text-5xl text-center break-all text-neutral-700 dark:text-neutral-400" style={{ touchAction: 'manipulation' }}>
-                                {item.question}
-                                {renderTip('mt-10')}
-                                {/* {renderStar(item, 'mt-8 justify-center')} */}
-                            </div>
-                        )}
-                        {!hiddenAnswer && <div className="px-4 w-full h-full pb-4 overflow-auto" style={{ touchAction: 'manipulation' }}>
+                        {/* 始终渲染题目，通过 CSS 控制显示/隐藏 */}
+                        <div className="p-4 text-5xl text-center break-all text-neutral-700 dark:text-neutral-400" style={{ touchAction: 'manipulation', display: hiddenAnswer ? 'block' : 'none' }}>
+                            {item.question}
+                            {renderTip('mt-10')}
+                            {/* {renderStar(item, 'mt-8 justify-center')} */}
+                        </div>
+                        {/* 始终渲染答案，通过 CSS 控制显示/隐藏 */}
+                        <div className="px-4 w-full h-full pb-4 overflow-auto" style={{ touchAction: 'manipulation', display: !hiddenAnswer ? 'block' : 'none' }}>
                             <MarkdownRender key={markdownKey} value={item.answer} />
-                        </div>}
+                        </div>
                     </div>
                 </div>
             </Swiper.Item>
