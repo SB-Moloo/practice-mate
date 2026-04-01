@@ -54,6 +54,7 @@ const PracticePage = (props: PractiseProps) => {
             if (prac) {
                 setHiddenAnswer(true)
             }
+            // 切换题目时，触发所有图片组件的 src 变化，会自动关闭预览
         }} defaultIndex={index} allowTouchMove={true} style={{ "--height": '100%' }}>{questionPool.map((item, idx) => {
             return <Swiper.Item className="h-full relative" key={idx}>
                 <div className="h-full relative flex flex-col">

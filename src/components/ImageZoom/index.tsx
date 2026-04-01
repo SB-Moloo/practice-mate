@@ -9,6 +9,13 @@ interface ImageZoomProps {
 const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt }) => {
     const [visible, setVisible] = useState(false);
 
+    // 当 src 变化时，自动关闭预览
+    React.useEffect(() => {
+        if (visible) {
+            setVisible(false);
+        }
+    }, [src, visible]);
+
     return (
         <>
             <img 
