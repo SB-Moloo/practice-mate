@@ -23,11 +23,11 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt }) => {
             />
             {visible && (
                 <div 
-                    className="fixed inset-0 z-50 bg-black bg-opacity-95 flex items-center justify-center"
+                    className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center overflow-hidden"
                     onClick={() => setVisible(false)}
                 >
                     <div 
-                        className="w-full h-full flex items-center justify-center p-0"
+                        className="w-full h-full relative"
                         onClick={(e: React.MouseEvent) => e.stopPropagation()}
                     >
                         <button 
@@ -49,7 +49,7 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt }) => {
                             alignmentAnimation={{ disabled: false }}
                         >
                             <TransformComponent>
-                                <div className="w-full h-full flex items-center justify-center">
+                                <div className="w-full h-full flex items-center justify-center overflow-hidden">
                                     <img 
                                         src={src} 
                                         alt={alt}
