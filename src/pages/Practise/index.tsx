@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState, useEffect } from "react"
 import { flushSync } from "react-dom"
 import { FloatingBubble, Swiper, SwiperRef } from "antd-mobile"
 import { doubleClick } from "../../utils/common"
@@ -24,6 +24,21 @@ const PracticePage = (props: PractiseProps) => {
     const [hiddenAnswer, setHiddenAnswer] = useState<Boolean>(prac)
     const doubleTapTimestamp = useRef<number>(0)
 
+    // 监听键盘事件
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                toggleAnswer()
+            }
+        }
+        
+        window.addEventListener('keydown', handleKeyDown)
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+        }
+    }, [])
+
     const renderTitle = () => {
         return item ? <div className="flex items-center gap-2">
             <div className="text-sm text-neutral-500 dark:text-neutral-400">
@@ -36,7 +51,12 @@ const PracticePage = (props: PractiseProps) => {
         </div> : <></>
     }
     const renderTip = (className: string) => {
-        return <div className={classNames('text-sm text-neutral-600', className)}>双击{hiddenAnswer ? '查看' : '隐藏'}答案</div>
+        return <div className={classNames('text-sm text-neutral-600', className)}>
+            <div className="flex flex-col gap-1">
+                <div>💻 电脑：按 Enter/空格 切换答案</div>
+                <div>📱 手机：双击屏幕 切换答案</div>
+            </div>
+        </div>
     }
 
     // 处理移动端触摸双击
