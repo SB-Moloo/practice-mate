@@ -4,6 +4,7 @@ import rehypeHighlight from 'rehype-highlight'
 import { useEffect } from "react"
 import { useDarkMode } from "../../utils/hook"
 import ImageZoom from "../ImageZoom"
+
 const MarkdownRender = (props: { value: string }) => {
     const isDark = useDarkMode()
     useEffect(() => {
@@ -20,12 +21,31 @@ const MarkdownRender = (props: { value: string }) => {
         if (old) document.head.removeChild(old);
         document.head.appendChild(link);
     }, [isDark]);
+
+    // 阻止滚动事件冒泡
+    const handleTouchMove = (e: React.TouchEvent) => {
+        e.stopPropagation();
+    }
+
+    const handleWheel = (e: React.WheelEvent) => {
+        e.stopPropagation();
+    }
+
     return <ReactMarkdown
         children={props.value}
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
         components={{
-            img: ({ src, alt }) => <ImageZoom src={src || ''} alt={alt} />
+            img: ({ src, alt }) => <ImageZoom src={src || ''} alt={alt} />,
+            pre: ({ node, children, ...props }) => (
+                <pre 
+                    {...props}
+                    onTouchMove={handleTouchMove}
+                    onWheel={handleWheel}
+                >
+                    {children}
+                </pre>
+            )
         }}
     />
 }

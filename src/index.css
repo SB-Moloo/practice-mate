@@ -66,7 +66,8 @@ img {
 pre {
 	@apply overflow-x-auto;
 	max-width: 100%;
-	touch-action: pan-x; /* 允许横向滚动 */
+	touch-action: pan-x pinch-zoom; /* 允许横向滚动和缩放 */
+	overflow-y: hidden; /* 阻止垂直滚动 */
 	
 	/* 防止滚动传播到父元素 */
 	&:has(> code) {
