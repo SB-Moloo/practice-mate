@@ -23,15 +23,15 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt }) => {
             />
             {visible && (
                 <div 
-                    className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
+                    className="fixed inset-0 z-50 bg-black bg-opacity-95 flex items-center justify-center"
                     onClick={() => setVisible(false)}
                 >
                     <div 
-                        className="relative w-full h-full flex items-center justify-center p-4"
+                        className="w-full h-full flex items-center justify-center p-0"
                         onClick={(e: React.MouseEvent) => e.stopPropagation()}
                     >
                         <button 
-                            className="absolute top-4 right-4 text-white text-3xl z-50 p-2 hover:text-gray-300 transition-colors"
+                            className="absolute top-4 right-4 text-white text-4xl z-50 p-2 hover:text-gray-300 transition-colors bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center"
                             onClick={() => setVisible(false)}
                             aria-label="关闭"
                         >
@@ -39,26 +39,30 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt }) => {
                         </button>
                         <TransformWrapper
                             initialScale={1}
-                            minScale={0.5}
-                            maxScale={5}
+                            minScale={0.1}
+                            maxScale={10}
                             limitToBounds={false}
                             wheel={{ step: 0.1 }}
                             pinch={{ step: 1 }}
                             doubleClick={{ disabled: true }}
+                            centerOnInit={true}
+                            alignmentAnimation={{ disabled: false }}
                         >
                             <TransformComponent>
-                                <img 
-                                    src={src} 
-                                    alt={alt}
-                                    style={{ 
-                                        maxWidth: '100%',
-                                        maxHeight: '80vh',
-                                        objectFit: 'contain',
-                                        cursor: 'grab',
-                                        userSelect: 'none'
-                                    }}
-                                    draggable={false}
-                                />
+                                <div className="w-full h-full flex items-center justify-center">
+                                    <img 
+                                        src={src} 
+                                        alt={alt}
+                                        style={{ 
+                                            maxWidth: '100vw',
+                                            maxHeight: '100vh',
+                                            objectFit: 'contain',
+                                            cursor: 'grab',
+                                            userSelect: 'none'
+                                        }}
+                                        draggable={false}
+                                    />
+                                </div>
                             </TransformComponent>
                         </TransformWrapper>
                     </div>
