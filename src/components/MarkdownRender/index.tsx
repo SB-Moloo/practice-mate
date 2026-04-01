@@ -3,6 +3,7 @@ import remarkGfm from "remark-gfm"
 import rehypeHighlight from 'rehype-highlight'
 import { useEffect } from "react"
 import { useDarkMode } from "../../utils/hook"
+import ImageZoom from "../ImageZoom"
 const MarkdownRender = (props: { value: string }) => {
     const isDark = useDarkMode()
     useEffect(() => {
@@ -23,6 +24,9 @@ const MarkdownRender = (props: { value: string }) => {
         children={props.value}
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
+        components={{
+            img: ({ src, alt }) => <ImageZoom src={src || ''} alt={alt} />
+        }}
     />
 }
 
