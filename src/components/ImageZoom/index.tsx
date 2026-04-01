@@ -37,7 +37,7 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt, onClickCapture }) => {
     }
 
     // 处理触摸结束
-    const handleTouchEnd = (e: React.TouchEvent) => {
+    const handleTouchEnd = () => {
         if (!isDragging.current) {
             // 如果父组件设置了 onClickCapture，先调用它决定是否允许点击
             if (onClickCapture) {
@@ -52,7 +52,7 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt, onClickCapture }) => {
     }
 
     // 处理点击事件（备用方案）
-    const handleClick = (e: React.MouseEvent) => {
+    const handleClick = () => {
         if (!isDragging.current) {
             // 如果父组件设置了 onClickCapture，先调用它决定是否允许点击
             if (onClickCapture) {
