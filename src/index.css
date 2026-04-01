@@ -82,3 +82,14 @@ pre > code {
 	min-width: 100%;
 	white-space: pre;
 }
+
+/* 修复 react-zoom-pan-pinch 的 overflow 问题 */
+.react-transform-wrapper,
+.transform-component-module_wrapper__SPB86 {
+	overflow: visible !important;
+}
+
+.react-transform-content,
+.transform-component-module_content__FBWxo {
+	overflow: visible !important;
+}

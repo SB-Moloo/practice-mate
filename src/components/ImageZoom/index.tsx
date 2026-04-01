@@ -70,7 +70,10 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt }) => {
                             centerOnInit={true}
                             alignmentAnimation={{ disabled: false }}
                         >
-                            <TransformComponent>
+                            <TransformComponent
+                                wrapperStyle={{ overflow: 'visible' }}
+                                contentStyle={{ overflow: 'visible' }}
+                            >
                                 <img 
                                     src={src} 
                                     alt={alt}
