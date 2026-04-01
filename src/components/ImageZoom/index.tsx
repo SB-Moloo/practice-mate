@@ -31,25 +31,25 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt }) => {
                         onClick={(e: React.MouseEvent) => e.stopPropagation()}
                     >
                         <button 
-                            className="absolute top-4 right-4 text-white text-4xl z-50 p-2 hover:text-gray-300 transition-colors bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center"
+                            className="absolute top-4 right-4 text-white text-4xl z-[60] p-2 hover:text-gray-300 transition-colors bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center"
                             onClick={() => setVisible(false)}
                             aria-label="关闭"
                         >
                             ×
                         </button>
-                        <TransformWrapper
-                            initialScale={1}
-                            minScale={0.1}
-                            maxScale={10}
-                            limitToBounds={false}
-                            wheel={{ step: 0.1 }}
-                            pinch={{ step: 1 }}
-                            doubleClick={{ disabled: true }}
-                            centerOnInit={true}
-                            alignmentAnimation={{ disabled: false }}
-                        >
-                            <TransformComponent>
-                                <div className="w-full h-full flex items-center justify-center overflow-hidden">
+                        <div className="w-full h-full flex items-center justify-center">
+                            <TransformWrapper
+                                initialScale={1}
+                                minScale={0.1}
+                                maxScale={10}
+                                limitToBounds={false}
+                                wheel={{ step: 0.1 }}
+                                pinch={{ step: 1 }}
+                                doubleClick={{ disabled: true }}
+                                centerOnInit={true}
+                                alignmentAnimation={{ disabled: false }}
+                            >
+                                <TransformComponent>
                                     <img 
                                         src={src} 
                                         alt={alt}
@@ -62,9 +62,9 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt }) => {
                                         }}
                                         draggable={false}
                                     />
-                                </div>
-                            </TransformComponent>
-                        </TransformWrapper>
+                                </TransformComponent>
+                            </TransformWrapper>
+                        </div>
                     </div>
                 </div>
             )}
